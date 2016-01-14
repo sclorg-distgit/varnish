@@ -1,0 +1,332 @@
+diff --git a/configure b/configure
+index 59d0c01..561da34 100755
+--- a/configure
++++ b/configure
+@@ -16699,7 +16699,7 @@ fi
+ LIBS="${save_LIBS}"
+ 
+ # Run-time directory
+-VARNISH_STATE_DIR='${localstatedir}/varnish'
++VARNISH_STATE_DIR='${localstatedir}/$rhsclpkgname'
+ 
+ 
+ # Default configuration directory.
+diff --git a/configure.ac b/configure.ac
+index bbe9da2..ce08a41 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -456,11 +456,11 @@ fi
+ LIBS="${save_LIBS}"
+ 
+ # Run-time directory
+-VARNISH_STATE_DIR='${localstatedir}/varnish'
++VARNISH_STATE_DIR='${localstatedir}/$rhsclpkgname'
+ AC_SUBST(VARNISH_STATE_DIR)
+ 
+ # Default configuration directory.
+-varnishconfdir='${sysconfdir}/varnish'
++varnishconfdir='${sysconfdir}/$rhsclpkgname'
+ AC_SUBST(varnishconfdir)
+ 
+ # Check for linker script support
+diff --git a/redhat/varnish.initrc b/redhat/varnish.initrc
+index 082c770..a221618 100755
+--- a/redhat/varnish.initrc
++++ b/redhat/varnish.initrc
+@@ -5,8 +5,8 @@
+ # chkconfig: - 90 10
+ # description: Varnish is a high-perfomance HTTP accelerator
+ # processname: varnishd
+-# config: /etc/sysconfig/varnish
+-# pidfile: /var/run/varnishd.pid
++# config: $sysconfdir/varnish
++# pidfile: $rundir/varnishd.pid
+ 
+ ### BEGIN INIT INFO
+ # Provides: varnish
+@@ -23,16 +23,16 @@
+ . /etc/init.d/functions
+ 
+ retval=0
+-pidfile=/var/run/varnish.pid
++pidfile=$rundir/varnish.pid
+ 
+-exec="/usr/sbin/varnishd"
+-reload_exec="/usr/sbin/varnish_reload_vcl"
++exec="$sbindir/varnishd"
++reload_exec="$sbindir/varnish_reload_vcl"
+ prog="varnishd"
+-config="/etc/sysconfig/varnish"
+-lockfile="/var/lock/subsys/varnish"
++config="$sysconfdir/sysconfig/varnish"
++lockfile="$localstatedir/lock/subsys/varnish"
+ 
+ # Include varnish defaults
+-[ -e /etc/sysconfig/varnish ] && . /etc/sysconfig/varnish
++[ -e $sysconfdir/sysconfig/varnish ] && . $sysconfdir/sysconfig/varnish
+ 
+ 
+ start() {
+@@ -66,7 +66,7 @@ start() {
+ 		ulimit -c ${DAEMON_COREFILE_LIMIT}
+ 	fi
+ 
+-        # $DAEMON_OPTS is set in /etc/sysconfig/varnish. At least, one
++        # $DAEMON_OPTS is set in $sysconfdir/varnish. At least, one
+         # has to set up a backend, or /tmp will be used, which is a bad idea.
+ 	if [ "$DAEMON_OPTS" = "" ]; then
+ 		echo "\$DAEMON_OPTS empty."
+@@ -74,7 +74,7 @@ start() {
+ 		return 6
+ 	else
+ 		# Varnish always gives output on STDOUT
+-		daemon --pidfile $pidfile  $exec -P $pidfile "$DAEMON_OPTS" > /dev/null 2>&1
++		daemon --pidfile $pidfile  $exec -P $pidfile "$DAEMON_OPTS" > /dev/null
+ 		retval=$?
+ 		if [ $retval -eq 0 ]
+ 		then
+diff --git a/redhat/varnish.logrotate b/redhat/varnish.logrotate
+index 535614d..7387665 100644
+--- a/redhat/varnish.logrotate
++++ b/redhat/varnish.logrotate
+@@ -1,10 +1,10 @@
+-/var/log/varnish/*.log {
++$logdir/*.log {
+     missingok
+     notifempty
+     sharedscripts
+     delaycompress
+     postrotate
+-        /bin/kill -HUP `cat /var/run/varnishlog.pid 2>/dev/null` 2> /dev/null || true
+-	/bin/kill -HUP `cat /var/run/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
++        /bin/kill -HUP `cat $rundir/varnishlog.pid 2>/dev/null` 2> /dev/null || true
++	/bin/kill -HUP `cat $rundir/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
+     endscript
+ }
+diff --git a/redhat/varnish.params b/redhat/varnish.params
+index 27a14dd..3f3f4d5 100644
+--- a/redhat/varnish.params
++++ b/redhat/varnish.params
+@@ -5,7 +5,7 @@
+ RELOAD_VCL=1
+ 
+ # Main configuration file. You probably want to change it.
+-VARNISH_VCL_CONF=/etc/varnish/default.vcl
++VARNISH_VCL_CONF=$sysconfdir/varnish/default.vcl
+ 
+ # Default address and port to bind to. Blank address means all IPv4
+ # and IPv6 interfaces, otherwise specify a host name, an IPv4 dotted
+@@ -18,11 +18,11 @@ VARNISH_ADMIN_LISTEN_ADDRESS=127.0.0.1
+ VARNISH_ADMIN_LISTEN_PORT=6082
+ 
+ # Shared secret file for admin interface
+-VARNISH_SECRET_FILE=/etc/varnish/secret
++VARNISH_SECRET_FILE=$sysconfdir/varnish/secret
+ 
+ # Backend storage specification, see Storage Types in the varnishd(5)
+ # man page for details.
+-VARNISH_STORAGE="file,/var/lib/varnish/varnish_storage.bin,1G"
++VARNISH_STORAGE="file,$localstatedir/lib/$name/varnish_storage.bin,1G"
+ 
+ # Default TTL used when the backend does not specify one
+ VARNISH_TTL=120
+diff --git a/redhat/varnish.service b/redhat/varnish.service
+index a4f3355..f4abd09 100644
+--- a/redhat/varnish.service
++++ b/redhat/varnish.service
+@@ -6,10 +6,10 @@ After=syslog.target network.target
+ 
+ #
+ # If you want to make changes to this file, please copy it to 
+-# /etc/systemd/system/varnish.service and make your changes there.
+-# This will override the file kept at /lib/systemd/system/varnish.service
++# /etc/systemd/system/$name.service and make your changes there.
++# This will override the file kept at /lib/systemd/system/$name.service
+ #
+-# Enviroment variables may be found in /etc/varnish/varnish.params
++# Enviroment variables may be found in $sysconfdir/varnish/varnish.params
+ #
+ 
+ # Maximum number of open files (for ulimit -n)
+@@ -22,14 +22,13 @@ LimitMEMLOCK=82000
+ # Maximum size of the corefile. 
+ LimitCORE=infinity
+ 
+-EnvironmentFile=/etc/varnish/varnish.params
++EnvironmentFile=$sysconfdir/varnish/varnish.params
+ 
+ Type=forking
+-PIDFile=/var/run/varnish.pid
++PIDFile=$rundir/varnish.pid
+ PrivateTmp=true
+-ExecStartPre=/usr/sbin/varnishd -C -f $VARNISH_VCL_CONF
+-ExecStart=/usr/sbin/varnishd \
+-	-P /var/run/varnish.pid \
++ExecStart=$sbindir/varnishd \
++	-P $rundir/varnish.pid \
+ 	-f $VARNISH_VCL_CONF \
+ 	-a ${VARNISH_LISTEN_ADDRESS}:${VARNISH_LISTEN_PORT} \
+ 	-T ${VARNISH_ADMIN_LISTEN_ADDRESS}:${VARNISH_ADMIN_LISTEN_PORT} \
+@@ -40,7 +39,7 @@ ExecStart=/usr/sbin/varnishd \
+ 	-s $VARNISH_STORAGE \
+ 	$DAEMON_OPTS
+ 
+-ExecReload=/usr/sbin/varnish_reload_vcl
++ExecReload=$sbindir/varnish_reload_vcl
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff --git a/redhat/varnish.sysconfig b/redhat/varnish.sysconfig
+index 6aa2354..41b68d8 100644
+--- a/redhat/varnish.sysconfig
++++ b/redhat/varnish.sysconfig
+@@ -1,6 +1,6 @@
+ # Configuration file for varnish
+ #
+-# /etc/init.d/varnish expects the variable $DAEMON_OPTS to be set from this
++# /etc/init.d/$name expects the variable $DAEMON_OPTS to be set from this
+ # shell script fragment.
+ #
+ 
+@@ -35,7 +35,7 @@ RELOAD_VCL=1
+ #             -T localhost:6082 \
+ #             -b localhost:8080 \
+ #             -u varnish -g varnish \
+-#             -s file,/var/lib/varnish/varnish_storage.bin,1G"
++#             -s file,$localstatedir/$name/varnish_storage.bin,1G"
+ 
+ 
+ ## Alternative 2, Configuration with VCL
+@@ -46,10 +46,10 @@ RELOAD_VCL=1
+ #
+ #DAEMON_OPTS="-a :6081 \
+ #             -T localhost:6082 \
+-#             -f /etc/varnish/default.vcl \
++#             -f $sysconfdir/varnish/default.vcl \
+ #             -u varnish -g varnish \
+-#             -S /etc/varnish/secret \
+-#             -s file,/var/lib/varnish/varnish_storage.bin,1G"
++#             -S $sysconfdir/varnish/secret \
++#             -s file,$localstatedir/lib/$name/varnish_storage.bin,1G"
+ 
+ 
+ ## Alternative 3, Advanced configuration
+@@ -57,7 +57,7 @@ RELOAD_VCL=1
+ # See varnishd(1) for more information.
+ #
+ # # Main configuration file. You probably want to change it :)
+-VARNISH_VCL_CONF=/etc/varnish/default.vcl
++VARNISH_VCL_CONF=$sysconfdir/varnish/default.vcl
+ #
+ # # Default address and port to bind to
+ # # Blank address means all IPv4 and IPv6 interfaces, otherwise specify
+@@ -70,7 +70,7 @@ VARNISH_ADMIN_LISTEN_ADDRESS=127.0.0.1
+ VARNISH_ADMIN_LISTEN_PORT=6082
+ #
+ # # Shared secret file for admin interface
+-VARNISH_SECRET_FILE=/etc/varnish/secret
++VARNISH_SECRET_FILE=$sysconfdir/varnish/secret
+ #
+ # # The minimum number of worker threads to start
+ VARNISH_MIN_THREADS=50
+diff --git a/redhat/varnishlog.initrc b/redhat/varnishlog.initrc
+index 2b5fc51..f015b12 100644
+--- a/redhat/varnishlog.initrc
++++ b/redhat/varnishlog.initrc
+@@ -6,7 +6,7 @@
+ # description: Varnish Cache logging daemon
+ # processname: varnishlog
+ # config: 
+-# pidfile: /var/run/varnishlog.pid
++# pidfile: $rundir/varnishlog.pid
+ 
+ ### BEGIN INIT INFO
+ # Provides: varnishlog
+@@ -22,17 +22,17 @@
+ . /etc/init.d/functions
+ 
+ retval=0
+-pidfile="/var/run/varnishlog.pid"
+-lockfile="/var/lock/subsys/varnishlog"
+-logfile="/var/log/varnish/varnish.log"
++pidfile="$rundir/varnishlog.pid"
++lockfile="$localstatedir/lock/subsys/varnishlog"
++logfile="$logdir/varnish.log"
+ 
+-exec="/usr/bin/varnishlog"
++exec="$bindir/varnishlog"
+ prog="varnishlog"
+ 
+ DAEMON_OPTS="-a -w $logfile -D -P $pidfile"
+ 
+ # Include varnishlog defaults
+-[ -e /etc/sysconfig/varnishlog ] && . /etc/sysconfig/varnishlog
++[ -e $sysconfdir/sysconfig/varnishlog ] && . $sysconfdir/sysconfig/varnishlog
+ 
+ start() {
+ 
+diff --git a/redhat/varnishlog.service b/redhat/varnishlog.service
+index c7a0193..91ce329 100644
+--- a/redhat/varnishlog.service
++++ b/redhat/varnishlog.service
+@@ -1,11 +1,11 @@
+ [Unit]
+ Description=Varnish HTTP accelerator logging daemon
+-After=varnish.service
++After=$name.service
+ 
+ [Service]
+ Type=forking
+-PIDFile=/run/varnishlog.pid
+-ExecStart=/usr/bin/varnishlog -a -w /var/log/varnish/varnish.log -D -P /run/varnishlog.pid
++PIDFile=$rundir/varnishlog.pid
++ExecStart=$bindir/varnishlog -a -w $logdir/varnish.log -D -P $rundir/varnishlog.pid
+ 
+ [Install]
+ WantedBy=multi-user.target
+diff --git a/redhat/varnishncsa.initrc b/redhat/varnishncsa.initrc
+index b23fa48..a41d2fe 100644
+--- a/redhat/varnishncsa.initrc
++++ b/redhat/varnishncsa.initrc
+@@ -22,17 +22,17 @@
+ . /etc/init.d/functions
+ 
+ retval=0
+-pidfile="/var/run/varnishncsa.pid"
+-lockfile="/var/lock/subsys/varnishncsa"
+-logfile="/var/log/varnish/varnishncsa.log"
++pidfile="$rundir/varnishncsa.pid"
++lockfile="$localstatedir/lock/subsys/varnishncsa"
++logfile="$logdir/varnishncsa.log"
+ 
+-exec="/usr/bin/varnishncsa"
++exec="$bindir/varnishncsa"
+ prog="varnishncsa"
+ 
+ DAEMON_OPTS="-a -w $logfile -D -P $pidfile"
+ 
+ # Include varnishncsa defaults
+-[ -e /etc/sysconfig/varnishncsa ] && . /etc/sysconfig/varnishncsa
++[ -e $sysconfdir/sysconfig/varnishncsa ] && . $sysconfdir/sysconfig/varnishncsa
+ 
+ start() {
+ 
+diff --git a/redhat/varnishncsa.service b/redhat/varnishncsa.service
+index e2ebdcd..2d104c7 100644
+--- a/redhat/varnishncsa.service
++++ b/redhat/varnishncsa.service
+@@ -1,11 +1,11 @@
+ [Unit]
+ Description=Varnish HTTP accelerator NCSA daemon
+-After=varnish.service
++After=$name.service
+ 
+ [Service]
+ Type=forking
+-PIDFile=/run/varnishncsa.pid
+-ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa.pid
++PIDFile=$rundir/varnishncsa.pid
++ExecStart=$bindir/varnishncsa -a -w $logdir/varnishncsa.log -D -P $rundir/varnishncsa.pid
+ 
+ [Install]
+ WantedBy=multi-user.target
