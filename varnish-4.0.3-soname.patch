@@ -1,0 +1,376 @@
+diff --git a/bin/varnishadm/Makefile.in b/bin/varnishadm/Makefile.in
+index 621ee35..58a3d2a 100644
+--- a/bin/varnishadm/Makefile.in
++++ b/bin/varnishadm/Makefile.in
+@@ -72,7 +72,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ varnishadm_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(varnishadm_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(varnishadm_CFLAGS) \
+ 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -92,7 +92,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishd/Makefile.in b/bin/varnishd/Makefile.in
+index b191bcd..d3653af 100644
+--- a/bin/varnishd/Makefile.in
++++ b/bin/varnishd/Makefile.in
+@@ -128,7 +128,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ varnishd_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(varnishd_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(varnishd_CFLAGS) \
+ 	$(CFLAGS) $(varnishd_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -148,7 +148,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishhist/Makefile.in b/bin/varnishhist/Makefile.in
+index ded554b..c9e07a2 100644
+--- a/bin/varnishhist/Makefile.in
++++ b/bin/varnishhist/Makefile.in
+@@ -93,7 +93,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishlog/Makefile.in b/bin/varnishlog/Makefile.in
+index b228951..6f3c47d 100644
+--- a/bin/varnishlog/Makefile.in
++++ b/bin/varnishlog/Makefile.in
+@@ -95,7 +95,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishncsa/Makefile.in b/bin/varnishncsa/Makefile.in
+index 927d1f4..1b92ac1 100644
+--- a/bin/varnishncsa/Makefile.in
++++ b/bin/varnishncsa/Makefile.in
+@@ -94,7 +94,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishstat/Makefile.in b/bin/varnishstat/Makefile.in
+index 8d9a584..6738133 100644
+--- a/bin/varnishstat/Makefile.in
++++ b/bin/varnishstat/Makefile.in
+@@ -89,7 +89,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishtest/Makefile.in b/bin/varnishtest/Makefile.in
+index 073e4fc..9c8b9d1 100644
+--- a/bin/varnishtest/Makefile.in
++++ b/bin/varnishtest/Makefile.in
+@@ -77,7 +77,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ varnishtest_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(varnishtest_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(varnishtest_CFLAGS) \
+ 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -97,7 +97,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/bin/varnishtop/Makefile.in b/bin/varnishtop/Makefile.in
+index 59bfa9e..4d6da76 100644
+--- a/bin/varnishtop/Makefile.in
++++ b/bin/varnishtop/Makefile.in
+@@ -95,7 +95,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/build-aux/ltmain.sh b/build-aux/ltmain.sh
+index c2852d8..b98e506 100644
+--- a/build-aux/ltmain.sh
++++ b/build-aux/ltmain.sh
+@@ -2393,7 +2393,7 @@ BSD-compatible install options are recognized)."
+ 
+       link)
+         $ECHO \
+-"Usage: $progname [OPTION]... --mode=link LINK-COMMAND...
++"Usage: $progname [OPTION]... -release rh-varnish4 --mode=link LINK-COMMAND...
+ 
+ Link object files or libraries together to form another library, or to
+ create an executable program.
+diff --git a/lib/libvarnish/Makefile.in b/lib/libvarnish/Makefile.in
+index 92dd001..893ce11 100644
+--- a/lib/libvarnish/Makefile.in
++++ b/lib/libvarnish/Makefile.in
+@@ -105,7 +105,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvarnish_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libvarnish_la_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(libvarnish_la_CFLAGS) \
+ 	$(CFLAGS) $(libvarnish_la_LDFLAGS) $(LDFLAGS) -o $@
+ @ENABLE_TESTS_TRUE@am__EXEEXT_1 = vnum_c_test$(EXEEXT)
+ PROGRAMS = $(noinst_PROGRAMS)
+@@ -115,7 +115,7 @@ am__vnum_c_test_SOURCES_DIST = vnum.c
+ vnum_c_test_OBJECTS = $(am_vnum_c_test_OBJECTS)
+ @ENABLE_TESTS_TRUE@vnum_c_test_DEPENDENCIES = $(am__DEPENDENCIES_1)
+ vnum_c_test_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(vnum_c_test_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(vnum_c_test_CFLAGS) \
+ 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -135,7 +135,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvarnishapi/Makefile.in b/lib/libvarnishapi/Makefile.in
+index 625b5a8..42116d7 100644
+--- a/lib/libvarnishapi/Makefile.in
++++ b/lib/libvarnishapi/Makefile.in
+@@ -108,7 +108,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvarnishapi_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 \
+ 	$(libvarnishapi_la_CFLAGS) $(CFLAGS) \
+ 	$(libvarnishapi_la_LDFLAGS) $(LDFLAGS) -o $@
+ PROGRAMS = $(noinst_PROGRAMS)
+@@ -121,7 +121,7 @@ am__DEPENDENCIES_1 =
+ vsl_glob_test_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1) libvarnishapi.la
+ vsl_glob_test_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(vsl_glob_test_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(vsl_glob_test_CFLAGS) \
+ 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ am__objects_1 = vxp_test-vas.$(OBJEXT) vxp_test-vav.$(OBJEXT) \
+ 	vxp_test-version.$(OBJEXT) vxp_test-cli_common.$(OBJEXT) \
+@@ -140,7 +140,7 @@ vxp_test_OBJECTS = $(am_vxp_test_OBJECTS)
+ vxp_test_DEPENDENCIES = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1)
+ vxp_test_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(vxp_test_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(vxp_test_CFLAGS) \
+ 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -160,7 +160,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvarnishcompat/Makefile.in b/lib/libvarnishcompat/Makefile.in
+index 00c932a..c7564b2 100644
+--- a/lib/libvarnishcompat/Makefile.in
++++ b/lib/libvarnishcompat/Makefile.in
+@@ -91,7 +91,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvarnishcompat_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libvarnishcompat_la_LDFLAGS) \
+ 	$(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -112,7 +112,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvcc/Makefile.in b/lib/libvcc/Makefile.in
+index 9f0469a..3628b08 100644
+--- a/lib/libvcc/Makefile.in
++++ b/lib/libvcc/Makefile.in
+@@ -96,7 +96,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvcc_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(libvcc_la_LDFLAGS) $(LDFLAGS) -o $@
+ SCRIPTS = $(dist_pkgdata_SCRIPTS)
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -117,7 +117,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvgz/Makefile.in b/lib/libvgz/Makefile.in
+index 426d479..82b7097 100644
+--- a/lib/libvgz/Makefile.in
++++ b/lib/libvgz/Makefile.in
+@@ -93,7 +93,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvgz_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libvgz_la_CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(libvgz_la_CFLAGS) \
+ 	$(CFLAGS) $(libvgz_la_LDFLAGS) $(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
+@@ -113,7 +113,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvmod_debug/Makefile.in b/lib/libvmod_debug/Makefile.in
+index 23d7700..7019702 100644
+--- a/lib/libvmod_debug/Makefile.in
++++ b/lib/libvmod_debug/Makefile.in
+@@ -63,7 +63,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvmod_debug_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libvmod_debug_la_LDFLAGS) $(LDFLAGS) \
+ 	-o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -84,7 +84,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvmod_directors/Makefile.in b/lib/libvmod_directors/Makefile.in
+index 6c267c5..033e020 100644
+--- a/lib/libvmod_directors/Makefile.in
++++ b/lib/libvmod_directors/Makefile.in
+@@ -92,7 +92,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvmod_directors_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libvmod_directors_la_LDFLAGS) \
+ 	$(LDFLAGS) -o $@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -113,7 +113,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/lib/libvmod_std/Makefile.in b/lib/libvmod_std/Makefile.in
+index ab7632a..a6eaab9 100644
+--- a/lib/libvmod_std/Makefile.in
++++ b/lib/libvmod_std/Makefile.in
+@@ -94,7 +94,7 @@ AM_V_lt = $(am__v_lt_@AM_V@)
+ am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
+ am__v_lt_0 = --silent
+ libvmod_std_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+-	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
++	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 \
+ 	$(AM_CFLAGS) $(CFLAGS) $(libvmod_std_la_LDFLAGS) $(LDFLAGS) -o \
+ 	$@
+ DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)
+@@ -115,7 +115,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/man/Makefile.in b/man/Makefile.in
+index 7a54b0d..a426a35 100644
+--- a/man/Makefile.in
++++ b/man/Makefile.in
+@@ -82,7 +82,7 @@ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+-	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) -release rh-varnish4 $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
+ am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
+diff --git a/redhat/find-provides b/redhat/find-provides
+index 2545e99..d0928b9 100755
+--- a/redhat/find-provides
++++ b/redhat/find-provides
+@@ -13,8 +13,8 @@ fi
+ cd $(dirname $0)/..
+ 
+ printf '#include "vcs_version.h"\nVCS_Version\n' \
+-        | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/varnishabi-strict-/'
++        | cpp - -Iinclude | sed -e '/^"/!d' -e 's/\"//g' -e 's/^/rh-varnish4abi-strict-/'
+ 
+-printf '#include "vrt.h"\nvarnishabi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
++printf '#include "vrt.h"\nrh-varnish4abi- VRT_MAJOR_VERSION . VRT_MINOR_VERSION\n' \
+	| cpp - -Iinclude \
+-	| sed -e '/^varnishabi-/!d' -e 's/U//g' -e 's/ //g'
++	| sed -e '/^rh-varnish4abi-/!d' -e 's/U//g' -e 's/ //g'
