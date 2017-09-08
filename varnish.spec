@@ -21,7 +21,7 @@
 Summary: High-performance HTTP accelerator
 Name: %{?scl:%scl_prefix}varnish
 Version: 5.1.3
-Release: 3%{?v_rc}%{?dist}
+Release: 4%{?v_rc}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.varnish-cache.org/
@@ -141,6 +141,8 @@ for f in configure configure.ac; do
   sed -i 's|ljemalloc|l%{scl}jemalloc|g' $f
   sed -i '/^VARNISH_STATE_DIR=/s,varnish,%{name},' $f
 done
+
+sed -i 's/varnishabi-/%{name}-varnishabi-/g' redhat/find-provides
 
 %build
 #export CFLAGS="$CFLAGS -Wp,-D_FORTIFY_SOURCE=0"
@@ -475,6 +477,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep  8 2017 Joe Orton <jorton@redhat.com> - 5.1.3-4
+- prefix varnishabi- provides with SCL name
+
 * Fri Sep  8 2017 Joe Orton <jorton@redhat.com> - 5.1.3-3
 - fix ExecReload in varnish.service, fix ExecStart in varnishncsa.service
 
