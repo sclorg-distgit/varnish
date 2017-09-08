@@ -1,18 +1,22 @@
-diff --git a/configure b/configure
-index 59d0c01..561da34 100755
---- a/configure
-+++ b/configure
-@@ -16699,7 +16699,7 @@ fi
- LIBS="${save_LIBS}"
- 
- # Run-time directory
--VARNISH_STATE_DIR='${localstatedir}/varnish'
-+VARNISH_STATE_DIR='${localstatedir}/$rhsclpkgname'
- 
- 
- # Default configuration directory.
---- a/redhat/varnishncsa.initrc
-+++ b/redhat/varnishncsa.initrc
+diff -uap varnish-5.1.3/redhat/varnish.logrotate.scl varnish-5.1.3/redhat/varnish.logrotate
+--- varnish-5.1.3/redhat/varnish.logrotate.scl
++++ varnish-5.1.3/redhat/varnish.logrotate
+@@ -1,10 +1,10 @@
+-/var/log/varnish/varnishncsa.log {
++$logdir/varnishncsa.log {
+   daily
+   rotate 7
+   compress
+   delaycompress
+   missingok
+   postrotate
+-    /bin/kill -HUP `cat /var/run/varnishncsa.pid /run/varnishncsa/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
++    /bin/kill -HUP `cat $rundir/varnishlog.pid $rundir/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
+   endscript
+ }
+diff -uap varnish-5.1.3/redhat/varnishncsa.initrc.scl varnish-5.1.3/redhat/varnishncsa.initrc
+--- varnish-5.1.3/redhat/varnishncsa.initrc.scl
++++ varnish-5.1.3/redhat/varnishncsa.initrc
 @@ -22,17 +22,17 @@
  . /etc/init.d/functions
  
@@ -36,23 +40,30 @@ index 59d0c01..561da34 100755
  
  start() {
  
---- varnish-5.1.3/redhat/varnish.logrotate~	2017-04-12 10:11:26.000000000 +0100
-+++ varnish-5.1.3/redhat/varnish.logrotate	2017-08-22 13:14:29.408071154 +0100
-@@ -1,10 +1,10 @@
--/var/log/varnish/varnishncsa.log {
-+$logdir/varnishncsa.log {
-   daily
-   rotate 7
-   compress
-   delaycompress
-   missingok
-   postrotate
--    /bin/kill -HUP `cat /var/run/varnishncsa.pid /run/varnishncsa/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
-+    /bin/kill -HUP `cat $rundir/varnishlog.pid $rundir/varnishncsa.pid 2>/dev/null` 2> /dev/null || true
-   endscript
- }
---- varnish-5.1.3/redhat/varnish.params~	2017-04-12 10:11:26.000000000 +0100
-+++ varnish-5.1.3/redhat/varnish.params	2017-08-22 13:17:00.700763943 +0100
+diff -uap varnish-5.1.3/redhat/varnishncsa.service.scl varnish-5.1.3/redhat/varnishncsa.service
+--- varnish-5.1.3/redhat/varnishncsa.service.scl
++++ varnish-5.1.3/redhat/varnishncsa.service
+@@ -1,14 +1,13 @@
+ [Unit]
+ Description=Varnish Cache HTTP accelerator NCSA logging daemon
+-After=varnish.service
++After=$name.service
+ 
+ [Service]
+-RuntimeDirectory=varnishncsa
+ Type=forking
+-PIDFile=/run/varnishncsa/varnishncsa.pid
++PIDFile=$rundir/varnishncsa.pid
+ User=varnishlog
+ Group=varnish
+-ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa/varnishncsa.pid
++ExecStart=$bindir/varnishncsa -a -w $logdir/varnishncsa.log -D -P $rundir/varnishncsa.pid
+ ExecReload=/bin/kill -HUP $MAINPID
+ 
+ [Install]
+diff -uap varnish-5.1.3/redhat/varnish.params.scl varnish-5.1.3/redhat/varnish.params
+--- varnish-5.1.3/redhat/varnish.params.scl
++++ varnish-5.1.3/redhat/varnish.params
 @@ -10,7 +10,7 @@
  #WARMUP_TIME=0
  
@@ -71,24 +82,31 @@ index 59d0c01..561da34 100755
  
  # Backend storage specification, see Storage Types in the varnishd(5)
  # man page for details.
---- varnish-5.1.3/redhat/varnish.service~	2017-08-22 13:24:31.206765477 +0100
-+++ varnish-5.1.3/redhat/varnish.service	2017-08-22 13:26:26.584041832 +0100
-@@ -3,11 +3,10 @@
+diff -uap varnish-5.1.3/redhat/varnish.service.scl varnish-5.1.3/redhat/varnish.service
+--- varnish-5.1.3/redhat/varnish.service.scl
++++ varnish-5.1.3/redhat/varnish.service
+@@ -1,15 +1,13 @@
++# If you want to make changes to this file, please create
++# an override file via "systemctl edit $name".
++#
++# Enviroment variables may be found in $sysconfdir/varnish/varnish.params
++#
+ [Unit]
+ Description=Varnish Cache, a high-performance HTTP accelerator
  After=network.target
  
  [Service]
 -# If you want to make changes to this file, please copy it to
 -# /etc/systemd/system/varnish.service and make your changes there.
 -# This will override the file kept at /lib/systemd/system/varnish.service
-+# If you want to make changes to this file, please create
-+# an override file via "systemctl edit $name".
- #
+-#
 -# Enviroment variables may be found in /etc/varnish/varnish.params
-+# Enviroment variables may be found in $sysconfdir/varnish/varnish.params
- #
- 
+-#
+-
  # Maximum number of open files (for ulimit -n)
-@@ -23,13 +22,13 @@
+ LimitNOFILE=131072
+ 
+@@ -23,22 +21,20 @@
  # Maximum size of the corefile.
  LimitCORE=infinity
  
@@ -102,27 +120,17 @@ index 59d0c01..561da34 100755
 -ExecStart=/usr/sbin/varnishd \
 -	-P /var/run/varnish.pid \
 +ExecStart=$sbindir/varnishd \
-+	-P $rundir//varnish.pid \
++	-P $rundir/varnish.pid \
  	-f $VARNISH_VCL_CONF \
  	-a ${VARNISH_LISTEN_ADDRESS}:${VARNISH_LISTEN_PORT} \
  	-T ${VARNISH_ADMIN_LISTEN_ADDRESS}:${VARNISH_ADMIN_LISTEN_PORT} \
---- varnish-5.1.3/redhat/varnishncsa.service~	2017-04-12 10:11:26.000000000 +0100
-+++ varnish-5.1.3/redhat/varnishncsa.service	2017-08-22 13:31:56.170686863 +0100
-@@ -1,14 +1,13 @@
- [Unit]
- Description=Varnish Cache HTTP accelerator NCSA logging daemon
--After=varnish.service
-+After=$name.service
- 
- [Service]
--RuntimeDirectory=varnishncsa
- Type=forking
--PIDFile=/run/varnishncsa/varnishncsa.pid
-+PIDFile=$rundir/varnishncsa.pid
- User=varnishlog
- Group=varnish
--ExecStart=/usr/bin/varnishncsa -a -w /var/log/varnish/varnishncsa.log -D -P /run/varnishncsa/varnishncsa.pid
-+ExecStart=/usr/bin/varnishncsa -a -w $logdir/varnishncsa.log -D -P $rundir/varnishncsa.pid
- ExecReload=/bin/kill -HUP $MAINPID
+ 	-S $VARNISH_SECRET_FILE \
+ 	-s $VARNISH_STORAGE \
+ 	$DAEMON_OPTS
+-
+-ExecReload=/usr/sbin/varnish_reload_vcl
++ExecReload=$sbindir/varnish_reload_vcl
  
  [Install]
+ WantedBy=multi-user.target
+-

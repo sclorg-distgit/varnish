@@ -21,7 +21,7 @@
 Summary: High-performance HTTP accelerator
 Name: %{?scl:%scl_prefix}varnish
 Version: 5.1.3
-Release: 2%{?v_rc}%{?dist}
+Release: 3%{?v_rc}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.varnish-cache.org/
@@ -135,13 +135,12 @@ tar xzf %SOURCE1
 ln -s pkg-varnish-cache-%{commit1}/redhat redhat
 ln -s pkg-varnish-cache-%{commit1}/debian debian
 
-%patch0 -p1
-sed -i 's|\$rhsclpkgname|%{name}|g' ./configure
-sed -i 's|\$rhsclpkgname|%{name}|g' ./configure.ac
-sed -i 's|ljemalloc|l%{scl}jemalloc|g' ./configure
-sed -i 's|ljemalloc|l%{scl}jemalloc|g' ./configure.ac
+%patch0 -p1 -b .scl
 
-#patch6 -p1
+for f in configure configure.ac; do
+  sed -i 's|ljemalloc|l%{scl}jemalloc|g' $f
+  sed -i '/^VARNISH_STATE_DIR=/s,varnish,%{name},' $f
+done
 
 %build
 #export CFLAGS="$CFLAGS -Wp,-D_FORTIFY_SOURCE=0"
@@ -476,6 +475,9 @@ fi
 %endif
 
 %changelog
+* Fri Sep  8 2017 Joe Orton <jorton@redhat.com> - 5.1.3-3
+- fix ExecReload in varnish.service, fix ExecStart in varnishncsa.service
+
 * Tue Aug 22 2017 Joe Orton <jorton@redhat.com> - 5.1.3-2
 - update to Varnish 5.x, merge with Fedora (Ingvar Hagelund et al)
 
