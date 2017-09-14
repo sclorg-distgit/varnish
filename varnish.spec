@@ -21,7 +21,7 @@
 Summary: High-performance HTTP accelerator
 Name: %{?scl:%scl_prefix}varnish
 Version: 5.1.3
-Release: 4%{?v_rc}%{?dist}
+Release: 5%{?v_rc}%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.varnish-cache.org/
@@ -144,6 +144,11 @@ done
 
 sed -i 's/varnishabi-/%{name}-varnishabi-/g' redhat/find-provides
 
+sed -i '
+s,/etc/sysconfig/varnish,%{_sysconfdir}/varnish/varnish.params,
+/^VARNISHADM=/s,varnishadm,%{_bindir}/varnishadm,
+' redhat/varnish_reload_vcl
+
 %build
 #export CFLAGS="$CFLAGS -Wp,-D_FORTIFY_SOURCE=0"
 
@@ -254,8 +259,6 @@ scl_reggen %{name} --cpfile %{_sysconfdir}/varnish/varnish.params
 install -D -m 0644 redhat/varnishncsa.service %{buildroot}%{_unitdir}/%{?scl:%scl_prefix}varnishncsa.service
 expand_variables %{buildroot}%{_unitdir}/%{?scl:%scl_prefix}varnishncsa.service
 scl_reggen %{name} --cpfile /%{_unitdir}/%{?scl:%scl_prefix}varnishncsa.service
-
-sed -i 's,sysconfig/varnish,varnish/varnish.params,' redhat/varnish_reload_vcl
 
 # tmpfiles.d configuration
 mkdir -p %{buildroot}%{_root_prefix}/lib/tmpfiles.d 
@@ -477,6 +480,9 @@ fi
 %endif
 
 %changelog
+* Thu Sep 14 2017 Joe Orton <jorton@redhat.com> - 5.1.3-5
+- fix varnish_reload_vcl paths
+
 * Fri Sep  8 2017 Joe Orton <jorton@redhat.com> - 5.1.3-4
 - prefix varnishabi- provides with SCL name
 
