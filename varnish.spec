@@ -20,17 +20,19 @@
 
 Summary: High-performance HTTP accelerator
 Name: %{?scl:%scl_prefix}varnish
-Version: 5.1.3
-Release: 5%{?v_rc}%{?dist}
+Version: 6.0.0
+Release: 2%{?dist}
 License: BSD
 Group: System Environment/Daemons
 URL: http://www.varnish-cache.org/
-Source0: http://repo.varnish-cache.org/source/varnish-%{version}.tar.gz
+Source0: http://varnish-cache.org/_downloads/varnish-%{version}.tgz
 Source1: https://github.com/varnishcache/pkg-varnish-cache/archive/%{commit1}.tar.gz#/pkg-varnish-cache-%{shortcommit1}.tar.gz
 Source2: scl-register-helper.sh
 Source3: varnish.tmpfiles
 Patch0:  varnish.scl.patch
-Patch6:  varnish-4.0.3-soname.patch
+Patch1:  varnish-4.1.0.fix_find-provides.patch
+Patch2:  varnish-5.1.1.fix_ld_library_path_in_doc_build.patch
+
 
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
@@ -136,6 +138,8 @@ ln -s pkg-varnish-cache-%{commit1}/redhat redhat
 ln -s pkg-varnish-cache-%{commit1}/debian debian
 
 %patch0 -p1 -b .scl
+%patch1 -p0
+%patch2 -p0
 
 for f in configure configure.ac; do
   sed -i 's|ljemalloc|l%{scl}jemalloc|g' $f
@@ -167,6 +171,9 @@ export AM_LT_LDFLAGS="-release %{scl}"
 %ifarch aarch64
   --with-jemalloc=no \
 %endif
+%ifarch x86_64 %arm
+   --disable-pcre-jit \
+%endif
   --localstatedir=%{_localstatedir}/lib  \
   --docdir=%{_docdir}/%{name}-%{version}
 
@@ -197,7 +204,11 @@ rm -rf doc/sphinx/build
 rm  -f doc/sphinx/Makefile.in.orig
 
 %check
-#make check LD_LIBRARY_PATH="%{buildroot}%{_libdir}:%{buildroot}%{_libdir}/%{name}" TESTS_PARALLELISM=5 VERBOSE=1
+%ifarch ppc64 ppc64le aarch64
+sed -i 's/48/128/g;' bin/varnishtest/tests/c00057.vtc
+%endif
+make check LD_LIBRARY_PATH="%{buildroot}%{_libdir}:%{buildroot}%{_libdir}/%{name}" TESTS_PARALLELISM=5 VERBOSE=1
+
 
 %install
 #include helper script for creating register stuff
@@ -364,13 +375,6 @@ rm -rf %{buildroot}
 %doc doc/html
 %doc doc/changes*.html
 
-#%files libs-static
-#%{_libdir}/libvarnish.a
-#%{_libdir}/libvarnishapi.a
-#%{_libdir}/libvarnishcompat.a
-#%{_libdir}/libvcc.a
-#%doc LICENSE
-
 %if 0%{?rhel} == 6
 %files selinux
 %defattr(-,root,root,-)
@@ -480,6 +484,16 @@ fi
 %endif
 
 %changelog
+* Wed Jul 18 2018 Luboš Uhliarik <luhliari@redhat.com> - 6.0.0-2
+- update to Varnish 6.0.0
+
+* Fri Jan 19 2018 Luboš Uhliarik <luhliari@redhat.com> - 5.2.1-3
+- Resolves: #1536402 - varnish crash with SEGFAULT on 1st use
+
+* Thu Jan 04 2018 Luboš Uhliarik <luhliari@redhat.com> - 5.2.1-1
+- Resolves: #1518821 - RFE: add collection for Varnish 5
+- update to Varnish 5.2.1
+
 * Thu Sep 14 2017 Joe Orton <jorton@redhat.com> - 5.1.3-5
 - fix varnish_reload_vcl paths
 
